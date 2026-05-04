@@ -215,8 +215,8 @@ jupyter notebook notebooks/nettoyage.ipynb
 
 Projet réalisé dans le cadre d'un test technique et d'une démarche portfolio, mettant en avant un profil **Data Analyst / BI Analyst avec sensibilité chef de projet**.
 
-📧 Contact : [ton-email]
-💼 LinkedIn : [ton-profil]
+📧 Contact : thomas.paul.sonzogni@gmail.com
+💼 LinkedIn : www.linkedin.com/in/thomas-sonzogni
 
 ---
 
