@@ -1,0 +1,22 @@
+# Données brutes lourdes (à télécharger depuis les sources publiques)
+data/V-Dem-CY-Core-v16.csv
+data/API_*.csv
+data/all.csv
+data/world_happiness_report_*.csv
+data/raw/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Power BI - sauvegardes auto uniquement (on garde le .pbix !)
+*.pbix.bak
