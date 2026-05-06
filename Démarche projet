@@ -105,25 +105,6 @@ Organisées par catégorie :
 - Bande verticale grise sur 2020-2021 pour matérialiser la période COVID
 ---
  
-## L'incident technique le plus parlant
- 
-Le **pivot sur la mesure d'écart** est le moment du projet qui illustre le mieux ma démarche.
- 
-**Le contexte** : la mesure phare prévue au cahier des charges était `Bonheur Attendu (régression PIB)`, calculée par une régression linéaire complète en DAX sur le log du PIB.
- 
-**Le problème** : à la mise en place, la mesure renvoyait des valeurs identiques au score réel pour la plupart des pays. Diagnostic : problème de contexte de filtre DAX, complexe à résoudre proprement.
- 
-**La décision** : après 2h passées à essayer de corriger via `ALL`, `ALLEXCEPT`, `REMOVEFILTERS`, j'ai arbitré en faveur d'une **mesure plus simple** : l'écart à la moyenne du continent.
- 
-**Pourquoi c'est intéressant** :
-- La nouvelle mesure répond à la **même question business** (« ce pays sur ou sous-performe-t-il par rapport à son contexte ? »)
-- Elle est **plus simple à expliquer** aux utilisateurs métier
-- Elle est **plus robuste techniquement**
-- L'arbitrage a été pris **rapidement**, sans s'acharner sur l'idée initiale
-**Le verbatim que je peux ressortir en entretien** : *« J'avais d'abord pensé à une régression linéaire complète, mais j'ai constaté un bug de contexte DAX et choisi une approche plus simple qui répond à la même question business. C'est une démonstration de pragmatisme technique que je préfère à l'acharnement sur une solution complexe. »*
- 
----
- 
 ## Ce que j'aurais fait en plus avec un client réel
  
 Sur un projet portfolio de 8h, j'ai dû faire des arbitrages. Voici ce que j'ajouterais sur une mission client :
