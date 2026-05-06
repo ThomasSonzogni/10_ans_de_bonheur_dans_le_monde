@@ -22,7 +22,13 @@ Le rapport Power BI est organisé en 5 pages :
 | Démocratie | La démocratie rend-elle plus heureux ? |
 | Pays atypiques | Qui s'écarte du modèle attendu ? |
  
-> 💡 *Captures d'écran à insérer dans `assets/`*
+<img width="1264" height="701" alt="image" src="https://github.com/user-attachments/assets/a0ebcae8-5e06-4fae-98a7-c576dd00c4b5" />
+<img width="1272" height="711" alt="image" src="https://github.com/user-attachments/assets/92954785-5903-4aa1-852d-f5294555eb4a" />
+<img width="1270" height="705" alt="image" src="https://github.com/user-attachments/assets/bd49712c-f98a-409b-bd5b-640be176caad" />
+<img width="1269" height="708" alt="image" src="https://github.com/user-attachments/assets/6f519fc9-cb61-4824-9fa9-298b71a6dad2" />
+<img width="1270" height="708" alt="image" src="https://github.com/user-attachments/assets/8fb7da5e-9fc3-4c47-852f-037d86c6b0fe" />
+
+
  
 ---
  
