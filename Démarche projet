@@ -1,0 +1,173 @@
+# Démarche projet
+## 10 ans de bonheur dans le monde
+ 
+---
+ 
+**Auteur** : Thomas Sonzogni
+**Stack** : Python · Power BI · DAX · Power Query
+**Repo** : [github.com/ThomasSonzogni/10_ans_de_bonheur_dans_le_monde](https://github.com/ThomasSonzogni/10_ans_de_bonheur_dans_le_monde)
+ 
+---
+ 
+## Pourquoi ce document ?
+ 
+Ce document est volontairement court. Il ne raconte pas une histoire fictive de mission client, il résume ce que j'ai voulu montrer à travers ce projet.
+ 
+Le rapport Power BI prend pour exemple une **Direction RSE fictive (Lumea Group)** comme fil conducteur, simplement pour donner du sens business aux analyses. Mais la démarche projet décrite ici est la mienne, transposable à n'importe quel contexte.
+ 
+L'objectif est de démontrer que **je sais faire un projet data de bout en bout** : du premier échange avec un commanditaire jusqu'à la mesure de la valeur livrée.
+ 
+---
+ 
+## Ce que je voulais démontrer
+ 
+### 1. Cadrage et reformulation du besoin
+ 
+Sur tout projet, ma première étape est **de remettre en question l'idée initiale**. Ici, l'idée de départ était banale (« faire un dashboard sur le bonheur ») et le scope a été redéfini vers une analyse des écarts au modèle, beaucoup plus différenciante.
+ 
+**En contexte client réel**, cette étape se matérialise par une R1 de découverte où je pose des questions ouvertes, je reformule le besoin, et j'identifie ce qui n'est pas dit. Le piège est presque toujours le même : le commanditaire formule **la solution** qu'il imagine plutôt que **le problème** qu'il cherche à résoudre.
+ 
+### 2. Étude de faisabilité avec arbitrage
+ 
+Avant de coder, je présente toujours **plusieurs options** d'architecture avec leurs avantages/inconvénients et une recommandation justifiée. Sur ce projet, 3 options ont été comparées :
+- Option A : Power Query seul (simple mais limité)
+- Option B : Python + Power BI (retenue : démontre 2 compétences distinctes)
+- Option C : Python + datawarehouse + Power BI (surdimensionné pour le besoin)
+**En contexte client**, cet arbitrage permet au commanditaire de comprendre le rapport effort/valeur et de faire un choix éclairé plutôt que subi.
+ 
+### 3. Cahier des charges avec critères de succès quantifiés
+ 
+7 critères mesurables ont été posés au cadrage, validés à la livraison. Pas de critères flous (« un beau dashboard ») mais des critères concrets (« au moins 8 mesures DAX dont 3 utilisant time intelligence »).
+ 
+**En contexte client**, des critères quantifiés au cadrage rendent la recette objective et empêchent le scope creep.
+ 
+### 4. Réalisation par lots avec validation
+ 
+Le projet a été découpé en phases (préparation, modélisation, mesures, visualisation, documentation) avec un livrable clair à chaque phase et un test de cohérence avant de passer à la suivante.
+ 
+**En contexte client**, je fais des points hebdomadaires courts (30 min) pour montrer l'avancement, recueillir les retours et ajuster avant qu'il ne soit trop tard.
+ 
+### 5. Documentation des décisions et incidents
+ 
+10 décisions importantes ont été tracées dans le journal de projet, dont :
+- Le choix du code ISO 3 lettres comme clé de jointure
+- Le pivot d'une régression linéaire complexe vers une mesure plus simple (écart au continent) après diagnostic d'un bug DAX
+- L'organisation du rapport en page d'accueil + 4 pages thématiques plutôt qu'en pages juxtaposées
+**En contexte client**, ce journal sert de mémoire projet : six mois après la livraison, on peut retrouver pourquoi telle décision a été prise, ce qui est précieux pour la maintenance.
+ 
+### 6. Validation et autovalidation
+ 
+Pour ce projet portfolio, j'ai fait une autovalidation contre les 7 critères du cahier des charges. 6 atteints pleinement, 1 légèrement dépassé (timing : ~9h vs 8h prévues).
+ 
+**En contexte client**, la validation est formalisée en PV de recette signé, avec tests fonctionnels, tests utilisateurs et liste d'anomalies à corriger.
+ 
+### 7. Mesure de la valeur et roadmap
+ 
+Au-delà de la livraison technique, je pose toujours la question : **comment va-t-on mesurer que ce projet apporte de la valeur ?** Indicateurs d'usage, indicateurs métier, retours qualitatifs.
+ 
+Et je propose une **roadmap d'évolution** dès le cadrage, parce qu'un projet data n'est jamais « fini ».
+ 
+---
+ 
+## Ce que je voulais démontrer techniquement
+ 
+### Pipeline Python (notebook `nettoyage.ipynb`)
+ 
+- Chargement filtré du fichier V-Dem (600 Mo brut → quelques Mo en mémoire) via `usecols=`
+- Factorisation en fonction réutilisable `clean_wb_indicator()` pour les 4 indicateurs Banque Mondiale
+- Harmonisation manuelle de **17 cas** de noms de pays divergents entre sources
+- Gestion documentée de **3 territoires non-ISO** (Kosovo conservé avec XKX, North Cyprus et Somaliland exclus avec traçabilité)
+- Export en `utf-8-sig` pour la compatibilité Power BI sur les caractères spéciaux
+### Modèle Power BI
+ 
+- Schéma en étoile avec 2 dimensions (`dim_pays`, `dim_calendrier`) et 3 faits (`fact_happiness`, `fact_economy`, `fact_democracy`)
+- Relations 1:N en direction simple (pas de bidirectionnel)
+- Colonnes techniques (`country_code`, `country_name`, `year`) masquées côté faits
+- Table `_Mesures` dédiée pour l'organisation des calculs
+- Table calendrier générée en M (et non en DAX)
+### DAX (~25 mesures)
+ 
+Organisées par catégorie :
+- **Mesures de base** : moyennes, médianes, comptages distincts
+- **Time intelligence** : `Score Bonheur N-1`, `Évolution Bonheur`, `Moyenne Mobile 3 ans`
+- **Classements** : `Rang Bonheur` avec `RANKX` et gestion du total via `HASONEVALUE`
+- **Catégorisation** : `Catégorie Bonheur` avec `SWITCH` et emojis
+- **Virtual tables** : `Top Pays Bonheur` avec `TOPN` + `CONCATENATEX`
+- **Mesures contextuelles** : `Bonheur Attendu (continent)` avec `ALLEXCEPT`
+- **Mesures composées** : `Écart au modèle` (combinaison de 2 mesures)
+### UX Power BI
+ 
+- Page d'accueil avec navigation par boutons (états Par défaut + Au survol)
+- Bouton retour Accueil sur chaque page secondaire
+- Titres formulés en **questions** (« Où en est le bonheur dans le monde ? ») plutôt qu'en intitulés
+- Mise en forme conditionnelle (dégradés rouge-blanc-vert sur les écarts)
+- Slicers harmonisés en haut de chaque page
+- Bande verticale grise sur 2020-2021 pour matérialiser la période COVID
+---
+ 
+## L'incident technique le plus parlant
+ 
+Le **pivot sur la mesure d'écart** est le moment du projet qui illustre le mieux ma démarche.
+ 
+**Le contexte** : la mesure phare prévue au cahier des charges était `Bonheur Attendu (régression PIB)`, calculée par une régression linéaire complète en DAX sur le log du PIB.
+ 
+**Le problème** : à la mise en place, la mesure renvoyait des valeurs identiques au score réel pour la plupart des pays. Diagnostic : problème de contexte de filtre DAX, complexe à résoudre proprement.
+ 
+**La décision** : après 2h passées à essayer de corriger via `ALL`, `ALLEXCEPT`, `REMOVEFILTERS`, j'ai arbitré en faveur d'une **mesure plus simple** : l'écart à la moyenne du continent.
+ 
+**Pourquoi c'est intéressant** :
+- La nouvelle mesure répond à la **même question business** (« ce pays sur ou sous-performe-t-il par rapport à son contexte ? »)
+- Elle est **plus simple à expliquer** aux utilisateurs métier
+- Elle est **plus robuste techniquement**
+- L'arbitrage a été pris **rapidement**, sans s'acharner sur l'idée initiale
+**Le verbatim que je peux ressortir en entretien** : *« J'avais d'abord pensé à une régression linéaire complète, mais j'ai constaté un bug de contexte DAX et choisi une approche plus simple qui répond à la même question business. C'est une démonstration de pragmatisme technique que je préfère à l'acharnement sur une solution complexe. »*
+ 
+---
+ 
+## Ce que j'aurais fait en plus avec un client réel
+ 
+Sur un projet portfolio de 8h, j'ai dû faire des arbitrages. Voici ce que j'ajouterais sur une mission client :
+ 
+| Étape ajoutée | Pourquoi |
+|---------------|----------|
+| Réunion de découverte (R1) avec questions ouvertes | Faire émerger le besoin réel |
+| Réunion de cadrage (R2) avec validation par les sponsors | Engager les parties prenantes |
+| Comité de pilotage (COPIL) à chaque jalon | Transparence et arbitrage |
+| Points hebdomadaires de 30 min | Détection précoce des dérives |
+| PV de recette formel signé | Engagement contractuel |
+| Mise en production sur Power BI Service | Vraie diffusion entreprise |
+| Row-Level Security (RLS) | Gouvernance des accès |
+| Session de formation utilisateurs | Adoption |
+| Identification de **champion users** | Effet multiplicateur sur l'adoption |
+| Mesure d'usage à 3 mois (Power BI Audit Logs) | Mesurer la valeur livrée |
+| Bilan formel à 3 mois et roadmap | Vision long terme |
+ 
+ 
+---
+ 
+## Ce que je voulais démontrer humainement
+ 
+✅ **L'écoute** : capacité à reformuler un besoin avant de coder
+✅ **L'arbitrage** : capacité à choisir entre simplicité et ambition technique
+✅ **La transparence** : capacité à documenter aussi les difficultés et les pivots
+✅ **L'autonomie** : capacité à mener un projet de bout en bout
+✅ **Le souci du livrable utilisateur** : pas un dashboard pour data analysts mais un outil pour décideurs
+ 
+---
+ 
+## En résumé
+ 
+Ce projet est volontairement modeste dans son périmètre (~9h de travail) mais ambitieux dans sa **démarche**. Il démontre que je sais :
+ 
+1. Cadrer un besoin et le reformuler si besoin
+2. Arbitrer entre plusieurs options techniques
+3. Réaliser proprement (Python + Power BI + DAX)
+4. Documenter au fil de l'eau, y compris les incidents
+5. Valider contre des critères posés en amont
+6. Penser au-delà du livrable (déploiement, adoption, valeur)
+7. Tirer des leçons et proposer une roadmap d'évolution
+C'est cette **démarche complète**, plus que le rapport lui-même, que je veux présenter en entretien.
+ 
+---
+ 
+*Document de synthèse rédigé en juin 2026.*
